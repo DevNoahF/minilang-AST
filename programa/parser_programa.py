@@ -1,24 +1,3 @@
-"""Reconhecimento de comandos e do programa completo (pessoa 3).
-
-As funções recebem a instância de Parser e podem ser associadas à classe:
-
-    from programa.parser_programa import item, lista_itens, programa
-
-    class Parser:
-        item = item
-        lista_itens = lista_itens
-        programa = programa
-
-O Parser compartilhado deve fornecer peek(), at_end(), expect(tipo),
-declaracao(), atribuicao() e saida(). Cada token deve ter os atributos tipo,
-linha e coluna. Os métodos de comando consomem seus próprios tokens e retornam
-os respectivos nós da AST.
-
-Na integração, a base comum deve fornecer ast_nodes.Programa(itens) e exportar
-ErroSintatico pelo pacote diagnostico. Esses componentes não são implementados
-aqui, pois pertencem à base compartilhada e à parte de diagnósticos.
-"""
-
 from ast_nodes import Programa
 from diagnostico import ErroSintatico
 
