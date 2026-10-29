@@ -1,7 +1,4 @@
-"""AST implementada pelo grupo para integrar o lexer antigo ao parser."""
-
 from dataclasses import dataclass
-
 
 @dataclass
 class Programa:

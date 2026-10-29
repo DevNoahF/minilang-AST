@@ -3,7 +3,6 @@ from .diagnosticos import ExceptionSyntax
 
 
 def item(parser):
-    """Seleciona o comando pelo token atual e delega seu reconhecimento."""
     token = parser.peek()
 
     if token.type == "KW_INT":
@@ -20,7 +19,6 @@ def item(parser):
 
 
 def lista_itens(parser):
-    """Retorna os comandos na ordem de leitura, deixando EOF para programa()."""
     itens = []
 
     while not parser.at_end():
@@ -30,7 +28,6 @@ def lista_itens(parser):
 
 
 def programa(parser):
-    """Reconhece zero ou mais comandos, exige EOF e retorna a raiz da AST."""
     itens = parser.lista_itens()
     parser.expect("EOF")
     return Programa(itens=itens)
