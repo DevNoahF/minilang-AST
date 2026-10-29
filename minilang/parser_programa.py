@@ -1,23 +1,21 @@
-from ast_nodes import Programa
-from diagnostico import ErroSintatico
+from .ast_nodes import Programa
+from .diagnosticos import ExceptionSyntax
 
 
 def item(parser):
     """Seleciona o comando pelo token atual e delega seu reconhecimento."""
     token = parser.peek()
 
-    if token.tipo == "INT":
+    if token.type == "KW_INT":
         return parser.declaracao()
-    if token.tipo == "ID":
+    if token.type == "IDENT":
         return parser.atribuicao()
-    if token.tipo == "PRINT":
+    if token.type == "KW_PRINT":
         return parser.saida()
 
-    raise ErroSintatico(
-        token_encontrado=token,
-        tipos_esperados=("INT", "ID", "PRINT"),
-        linha=token.linha,
-        coluna=token.coluna,
+    raise ExceptionSyntax(
+        token=token,
+        expected=("KW_INT", "IDENT", "KW_PRINT"),
     )
 
 
