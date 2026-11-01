@@ -1,5 +1,10 @@
 # Analisador Sintático da MiniLang
 
+- Noah Veri de Morais Franco - 2014803
+- Leonardo Perin Andreozi - 1995746
+- Gustavo Rosa de Jesus - 2012734
+- Joaquim Pedro Augusto de Oliveira - 1993926
+
 Trabalho 02: parser descendente recursivo que reconhece declarações `int`,
 atribuições, `print` e expressões com `+`, `-`, `*`, `/` e parênteses.
 Constrói uma AST (Árvore Sintática Abstrata), respeitando precedência e
