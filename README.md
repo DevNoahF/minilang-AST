@@ -15,13 +15,13 @@ O lexer foi reaproveitado do trabalho anterior do grupo.
 
 ## Executar
 
-Na pasta `minilang-AST`, com Python 3:
+Com Python 3 instalado, abra o terminal na pasta `minilang-AST` e execute:
 
 ```text
 python main.py examples/programa.min
 ```
 
-O exemplo produz a AST:
+A árvore sintática (AST) do arquivo informado será exibida no terminal:
 
 ```text
 Programa
