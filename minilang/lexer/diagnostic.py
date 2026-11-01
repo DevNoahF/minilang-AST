@@ -1,4 +1,3 @@
-
 class Diagnostic:
     def __init__(self, character, line, column, message):
         self.character = character

@@ -1,5 +1,3 @@
-"""Executa o lexer e o parser, exibindo a AST ou os diagnosticos."""
-
 import sys
 from pathlib import Path
 

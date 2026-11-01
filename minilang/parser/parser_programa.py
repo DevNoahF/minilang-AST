@@ -1,5 +1,5 @@
-from .ast_nodes import Programa
-from .diagnosticos import ExceptionSyntax
+from ..ast_nodes import Programa
+from ..diagnosticos import ExceptionSyntax
 
 
 def item(parser):

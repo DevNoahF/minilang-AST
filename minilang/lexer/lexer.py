@@ -1,3 +1,11 @@
+from .diagnostic import (
+    Diagnostic, is_ascii_digit, is_identifier_part, is_identifier_start,
+    is_whitespace,
+)
+from .token import Token
+from .token_type import KEYWORDS, TokenType
+
+
 class Lexer:
     def __init__(self, source):
         self.source = source.replace("\r\n", "\n")

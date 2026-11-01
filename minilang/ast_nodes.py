@@ -38,8 +38,7 @@ class Inteiro:
     valor: int
 
 
-def formatar_ast(no, nivel=0):
-    """Mostra a estrutura da AST sem executar o programa."""
+def formatar_ast(no, nivel=0, lado=None):
     filhos = []
     if isinstance(no, Programa):
         rotulo = "Programa"
@@ -62,6 +61,9 @@ def formatar_ast(no, nivel=0):
     else:
         raise TypeError(f"No de AST desconhecido: {type(no).__name__}")
 
-    linhas = ["  " * nivel + rotulo]
-    linhas.extend(formatar_ast(filho, nivel + 1) for filho in filhos)
+    prefixo = f"{lado}: " if lado else ""
+    linhas = ["  " * nivel + prefixo + rotulo]
+    for indice, filho in enumerate(filhos):
+        lado_filho = ("E", "D")[indice] if isinstance(no, Binaria) else None
+        linhas.append(formatar_ast(filho, nivel + 1, lado_filho))
     return "\n".join(linhas)

@@ -1,5 +1,5 @@
-from .ast_nodes import Atribuicao, Binaria, Declaracao, Inteiro, Saida, Variavel
-from .diagnosticos import ExceptionSyntax
+from ..ast_nodes import Atribuicao, Binaria, Declaracao, Inteiro, Saida, Variavel
+from ..diagnosticos import ExceptionSyntax
 from .parser_atribuicao import atribuicao
 from .parser_expressoes import expressao
 from .parser_programa import item, lista_itens, programa
@@ -9,10 +9,7 @@ class Parser:
     def __init__(self, tokens):
         self.tokens = list(tokens)
         if not self.tokens or self.tokens[-1].type != "EOF":
-            ExceptionSyntax(
-                token=self.tokens[-1] if self.tokens else None,
-                expected="EOF",
-            )
+            raise ValueError("A lista de tokens deve terminar com EOF")
         self.current = 0
 
     def peek(self):
@@ -29,7 +26,7 @@ class Parser:
             raise ExceptionSyntax(self.peek(), expected)
         return self.advance()
 
-    def match(self, expected):
+    def match(self, *expected):
         if self.peek().type in expected:
             self.advance()
             return True

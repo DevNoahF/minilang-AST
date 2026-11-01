@@ -28,13 +28,16 @@ Programa
   Declaracao(x)
   Atribuicao(x)
     Binaria(+)
-      Inteiro(2)
-      Binaria(*)
-        Inteiro(3)
-        Inteiro(4)
+      E: Inteiro(2)
+      D: Binaria(*)
+        E: Inteiro(3)
+        D: Inteiro(4)
   Saida
     Variavel(x)
 ```
+
+Nos filhos de cada operação binária, `E` indica o operando à esquerda e `D`
+indica o operando à direita.
 
 Para analisar outro programa, substitua o caminho pelo seu arquivo `.min`.
 

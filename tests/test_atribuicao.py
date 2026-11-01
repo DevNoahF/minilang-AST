@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from minilang.parser_atribuicao import atribuicao
+from minilang.parser.parser_atribuicao import atribuicao
 
 
 def test_atribuicao_sem_ponto_e_virgula():

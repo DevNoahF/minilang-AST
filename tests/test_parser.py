@@ -3,13 +3,13 @@ import pytest
 from minilang import Lexer, Parser, Token
 from minilang.ast_nodes import (
     Atribuicao, Binaria, Declaracao, Inteiro, Programa, Saida, Variavel,
+    formatar_ast,
 )
 from minilang.diagnosticos import ExceptionSyntax
 from main import main, run
 
 
 def tokens(*pares):
-    """Dados de teste no formato do lexer antigo; nao faz analise lexica."""
     resultado = []
     coluna = 1
     for tipo, lexema in pares:
@@ -168,32 +168,68 @@ def test_rejeita_sintaxe_invalida_e_nao_ignora_sobra(entrada):
         Parser(tokens(*entrada)).programa()
 
 
-@pytest.mark.parametrize(("source", "esperado"), [
+@pytest.mark.parametrize(("source", "esperado", "arvore_textual"), [
     (
         "print(2 + 3 * 4);",
         Programa([Saida(Binaria("+", Inteiro(2), Binaria("*", Inteiro(3), Inteiro(4))))]),
+        "Programa\n"
+        "  Saida\n"
+        "    Binaria(+)\n"
+        "      E: Inteiro(2)\n"
+        "      D: Binaria(*)\n"
+        "        E: Inteiro(3)\n"
+        "        D: Inteiro(4)",
     ),
     (
         "print((2 + 3) * 4);",
         Programa([Saida(Binaria("*", Binaria("+", Inteiro(2), Inteiro(3)), Inteiro(4)))]),
+        "Programa\n"
+        "  Saida\n"
+        "    Binaria(*)\n"
+        "      E: Binaria(+)\n"
+        "        E: Inteiro(2)\n"
+        "        D: Inteiro(3)\n"
+        "      D: Inteiro(4)",
     ),
     (
         "print(10 - 3 - 2);",
         Programa([Saida(Binaria("-", Binaria("-", Inteiro(10), Inteiro(3)), Inteiro(2)))]),
+        "Programa\n"
+        "  Saida\n"
+        "    Binaria(-)\n"
+        "      E: Binaria(-)\n"
+        "        E: Inteiro(10)\n"
+        "        D: Inteiro(3)\n"
+        "      D: Inteiro(2)",
     ),
-    ("print(y);", Programa([Saida(Variavel("y"))])),
-    ("", Programa([])),
+    (
+        "print(y);",
+        Programa([Saida(Variavel("y"))]),
+        "Programa\n  Saida\n    Variavel(y)",
+    ),
+    ("", Programa([]), "Programa"),
+], ids=[
+    "precedencia", "parenteses", "associatividade_a_esquerda",
+    "variavel_sem_declaracao", "entrada_vazia",
 ])
-def test_exemplos_do_professor_com_lexer_real(source, esperado):
+def test_exemplos_do_professor_com_lexer_real(source, esperado, arvore_textual):
     entrada, diagnostics = Lexer(source).scan_tokens()
     assert diagnostics == []
     parser = Parser(entrada)
-    assert parser.programa() == esperado
+    ast = parser.programa()
+    assert ast == esperado
+    assert formatar_ast(ast) == arvore_textual
     assert parser.at_end()
+    assert parser.current == len(entrada) - 1
+    assert parser.peek() is entrada[-1]
 
 
-def test_erro_do_professor_com_lexer_real():
-    entrada, diagnostics = Lexer("print(2 + ); print(3 + );").scan_tokens()
+@pytest.mark.parametrize("source", [
+    "print(2 + );",
+    "print(2 + ); print(3 + );",
+], ids=["expressao_incompleta", "para_no_primeiro_erro"])
+def test_erro_do_professor_com_lexer_real(source):
+    entrada, diagnostics = Lexer(source).scan_tokens()
     assert diagnostics == []
     parser = Parser(entrada)
     with pytest.raises(ExceptionSyntax) as resultado:
@@ -201,6 +237,14 @@ def test_erro_do_professor_com_lexer_real():
     erro = resultado.value
     assert (erro.line, erro.column) == (1, 11)
     assert erro.token.type == "RPAREN"
+    assert erro.token.lexeme == ")"
+    assert erro.expected == ("INT_LITERAL", "IDENT", "LPAREN")
+    assert str(erro) == (
+        "Erro sintatico na linha 1, coluna 11: encontrado RPAREN (')'); "
+        "esperado: INT_LITERAL, IDENT, LPAREN"
+    )
+    assert parser.current == 4
+    assert erro.token is entrada[4]
     assert parser.peek() is erro.token
 
 
