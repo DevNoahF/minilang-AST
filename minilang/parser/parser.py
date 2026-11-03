@@ -1,6 +1,7 @@
 from ..ast_nodes import Atribuicao, Binaria, Declaracao, Inteiro, Saida, Variavel
 from ..diagnosticos import ExceptionSyntax
 from .parser_atribuicao import atribuicao
+from .parser_controle import bloco, condicional, enquanto, para
 from .parser_expressoes import expressao
 from .parser_programa import item, lista_itens, programa
 
@@ -38,8 +39,11 @@ class Parser:
     def declaracao(self):
         self.expect("KW_INT")
         nome = self.expect("IDENT")
+        inicializador = None
+        if self.match("ASSIGN"):
+            inicializador = self.expressao()
         self.expect("SEMICOLON")
-        return Declaracao(nome.lexeme)
+        return Declaracao(nome.lexeme, inicializador)
 
     def fator(self):
         token = self.peek()
@@ -76,14 +80,26 @@ class Parser:
     def expressao(self):
         return expressao(self, Binaria)
 
-    def atribuicao(self):
-        return atribuicao(self, Atribuicao)
+    def atribuicao(self, com_ponto_e_virgula=True):
+        return atribuicao(self, Atribuicao, com_ponto_e_virgula)
+
+    def bloco(self):
+        return bloco(self)
+
+    def condicional(self):
+        return condicional(self)
+
+    def enquanto(self):
+        return enquanto(self)
+
+    def para(self):
+        return para(self)
 
     def item(self):
         return item(self)
 
-    def lista_itens(self):
-        return lista_itens(self)
+    def lista_itens(self, terminador="EOF"):
+        return lista_itens(self, terminador)
 
     def programa(self):
         return programa(self)

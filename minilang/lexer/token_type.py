@@ -4,6 +4,7 @@ class TokenType:
     KW_IF = "KW_IF"
     KW_ELSE = "KW_ELSE"
     KW_WHILE = "KW_WHILE"
+    KW_FOR = "KW_FOR"
 
     IDENT = "IDENT"
     INT_LITERAL = "INT_LITERAL"
@@ -34,4 +35,5 @@ KEYWORDS = {
     "if": TokenType.KW_IF,
     "else": TokenType.KW_ELSE,
     "while": TokenType.KW_WHILE,
+    "for": TokenType.KW_FOR,
 }

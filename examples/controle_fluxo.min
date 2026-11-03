@@ -1,0 +1,19 @@
+int x = 0;
+
+// WHILE: repete enquanto a condicao for verdadeira.
+while (x < 3) {
+    print(x);
+    x = x + 1;
+}
+
+// IF: seleciona o bloco quando a condicao for verdadeira.
+if (x == 3) {
+    print(x);
+}
+
+// FOR: inicializacao; condicao; atualizacao.
+for (int i = 0; i < 5; i = i + 1) {
+    if (i != 2) {
+        print(i);
+    }
+}

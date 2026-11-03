@@ -15,7 +15,7 @@ O lexer foi reaproveitado do trabalho anterior do grupo.
 
 - `minilang/`: lexer, parser, AST e diagnósticos.
 - `tests/`: testes automatizados.
-- `examples/`: exemplos de programa válido e erro sintático.
+- `examples/`: exemplos de programa válido, controle de fluxo e erro sintático.
 - `main.py`: entrada para executar o analisador.
 
 ## Executar
@@ -45,6 +45,14 @@ Nos filhos de cada operação binária, `E` indica o operando à esquerda e `D`
 indica o operando à direita.
 
 Para analisar outro programa, substitua o caminho pelo seu arquivo `.min`.
+
+## Extensão
+
+Adicionado suporte a `if`, `while` e `for`, com condições e blocos na AST.
+
+```text
+python main.py examples/controle_fluxo.min
+```
 
 ## Exemplo de erro
 
