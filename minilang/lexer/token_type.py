@@ -1,5 +1,10 @@
 class TokenType:
     KW_INT = "KW_INT"
+    KW_BOOL = "KW_BOOL"
+    KW_TRUE = "KW_TRUE"
+    KW_FALSE = "KW_FALSE"
+    KW_AND = "KW_AND"
+    KW_OR = "KW_OR"
     KW_PRINT = "KW_PRINT"
     KW_IF = "KW_IF"
     KW_ELSE = "KW_ELSE"
@@ -31,6 +36,13 @@ class TokenType:
 
 KEYWORDS = {
     "int": TokenType.KW_INT,
+    "bool": TokenType.KW_BOOL,
+    "true": TokenType.KW_TRUE,
+    "false": TokenType.KW_FALSE,
+    "True": TokenType.KW_TRUE,
+    "False": TokenType.KW_FALSE,
+    "AND": TokenType.KW_AND,
+    "OR": TokenType.KW_OR,
     "print": TokenType.KW_PRINT,
     "if": TokenType.KW_IF,
     "else": TokenType.KW_ELSE,

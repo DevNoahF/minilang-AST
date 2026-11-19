@@ -5,7 +5,7 @@ from ..diagnosticos import ExceptionSyntax
 def item(parser):
     token = parser.peek()
 
-    if token.type == "KW_INT":
+    if token.type in ("KW_INT", "KW_BOOL"):
         return parser.declaracao()
     if token.type == "IDENT":
         return parser.atribuicao()
@@ -22,7 +22,7 @@ def item(parser):
 
     raise ExceptionSyntax(
         token=token,
-        expected=("KW_INT", "IDENT", "KW_PRINT", "LBRACE", "KW_IF", "KW_WHILE", "KW_FOR"),
+        expected=("KW_INT", "KW_BOOL", "IDENT", "KW_PRINT", "LBRACE", "KW_IF", "KW_WHILE", "KW_FOR"),
     )
 
 

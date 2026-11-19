@@ -1,9 +1,31 @@
 def expressao(parser, criar_binaria):
+    return logico_ou(parser, criar_binaria)
+
+
+def logico_ou(parser, criar_binaria):
+    esquerda = logico_e(parser, criar_binaria)
+    while parser.peek().type == "KW_OR":
+        operador = parser.advance()
+        direita = logico_e(parser, criar_binaria)
+        esquerda = criar_binaria(operador, esquerda, direita)
+    return esquerda
+
+
+def logico_e(parser, criar_binaria):
+    esquerda = igualdade(parser, criar_binaria)
+    while parser.peek().type == "KW_AND":
+        operador = parser.advance()
+        direita = igualdade(parser, criar_binaria)
+        esquerda = criar_binaria(operador, esquerda, direita)
+    return esquerda
+
+
+def igualdade(parser, criar_binaria):
     esquerda = comparacao(parser, criar_binaria)
     while parser.peek().type in ("EQUAL_EQUAL", "BANG_EQUAL"):
         operador = parser.advance()
         direita = comparacao(parser, criar_binaria)
-        esquerda = criar_binaria(operador.lexeme, esquerda, direita)
+        esquerda = criar_binaria(operador, esquerda, direita)
 
     return esquerda
 
@@ -13,7 +35,7 @@ def comparacao(parser, criar_binaria):
     while parser.peek().type in ("LESS", "LESS_EQUAL", "GREATER", "GREATER_EQUAL"):
         operador = parser.advance()
         direita = adicao(parser, criar_binaria)
-        esquerda = criar_binaria(operador.lexeme, esquerda, direita)
+        esquerda = criar_binaria(operador, esquerda, direita)
 
     return esquerda
 
@@ -23,6 +45,6 @@ def adicao(parser, criar_binaria):
     while parser.peek().type in ("PLUS", "MINUS"):
         operador = parser.advance()
         direita = parser.termo()
-        esquerda = criar_binaria(operador.lexeme, esquerda, direita)
+        esquerda = criar_binaria(operador, esquerda, direita)
 
     return esquerda

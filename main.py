@@ -4,6 +4,7 @@ from pathlib import Path
 from minilang import Lexer, Parser
 from minilang.ast_nodes import formatar_ast
 from minilang.diagnosticos import ExceptionSyntax
+from minilang.semantica import AnalisadorSemantico, formatar_tabelas
 
 
 def run(source):
@@ -23,7 +24,17 @@ def run(source):
         print(error, file=sys.stderr)
         return 1
 
-    print(formatar_ast(ast))
+    analise = AnalisadorSemantico().analisar(ast)
+    print("TABELAS DE SÍMBOLOS")
+    print(formatar_tabelas(analise.escopos))
+    print("\nAST ANOTADA")
+    print(formatar_ast(ast, anotada=True))
+    print("\nDIAGNÓSTICOS")
+    if analise.diagnosticos:
+        for diagnostico in analise.diagnosticos:
+            print(diagnostico)
+        return 1
+    print("Nenhum erro semântico.")
     return 0
 
 

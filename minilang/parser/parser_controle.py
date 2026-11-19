@@ -9,29 +9,30 @@ def bloco(parser):
 
 
 def condicional(parser):
-    parser.expect("KW_IF")
+    token = parser.expect("KW_IF")
     parser.expect("LPAREN")
     condicao = parser.expressao()
     parser.expect("RPAREN")
     entao = parser.bloco()
-    return Condicional(condicao, entao)
+    senao = parser.bloco() if parser.match("KW_ELSE") else None
+    return Condicional(condicao, entao, senao, token)
 
 
 def enquanto(parser):
-    parser.expect("KW_WHILE")
+    token = parser.expect("KW_WHILE")
     parser.expect("LPAREN")
     condicao = parser.expressao()
     parser.expect("RPAREN")
     corpo = parser.bloco()
-    return Enquanto(condicao, corpo)
+    return Enquanto(condicao, corpo, token)
 
 
 def para(parser):
-    parser.expect("KW_FOR")
+    token = parser.expect("KW_FOR")
     parser.expect("LPAREN")
 
     inicializacao = None
-    if parser.peek().type == "KW_INT":
+    if parser.peek().type in ("KW_INT", "KW_BOOL"):
         inicializacao = parser.declaracao()
     elif parser.peek().type == "SEMICOLON":
         parser.advance()
@@ -49,4 +50,4 @@ def para(parser):
     parser.expect("RPAREN")
 
     corpo = parser.bloco()
-    return Para(inicializacao, condicao, atualizacao, corpo)
+    return Para(inicializacao, condicao, atualizacao, corpo, token)

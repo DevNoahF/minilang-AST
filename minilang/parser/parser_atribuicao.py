@@ -4,4 +4,7 @@ def atribuicao(parser, criar_atribuicao, com_ponto_e_virgula=True):
     expressao = parser.expressao()
     if com_ponto_e_virgula:
         parser.expect("SEMICOLON")
-    return criar_atribuicao(identificador.lexeme, expressao)
+    no = criar_atribuicao(identificador.lexeme, expressao)
+    if hasattr(no, "token"):
+        no.token = identificador
+    return no

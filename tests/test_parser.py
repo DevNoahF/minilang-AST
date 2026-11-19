@@ -146,7 +146,7 @@ def test_para_no_primeiro_erro_com_token_e_posicao():
     erro = resultado.value
     assert erro.token is entrada[4]
     assert (erro.line, erro.column) == (2, 7)
-    assert erro.expected == ("INT_LITERAL", "IDENT", "LPAREN")
+    assert erro.expected == ("INT_LITERAL", "IDENT", "LPAREN", "KW_TRUE", "KW_FALSE")
     assert parser.peek() is entrada[4]
 
 
@@ -238,10 +238,10 @@ def test_erro_do_professor_com_lexer_real(source):
     assert (erro.line, erro.column) == (1, 11)
     assert erro.token.type == "RPAREN"
     assert erro.token.lexeme == ")"
-    assert erro.expected == ("INT_LITERAL", "IDENT", "LPAREN")
+    assert erro.expected == ("INT_LITERAL", "IDENT", "LPAREN", "KW_TRUE", "KW_FALSE")
     assert str(erro) == (
         "Erro sintatico na linha 1, coluna 11: encontrado RPAREN (')'); "
-        "esperado: INT_LITERAL, IDENT, LPAREN"
+        "esperado: INT_LITERAL, IDENT, LPAREN, KW_TRUE, KW_FALSE"
     )
     assert parser.current == 4
     assert erro.token is entrada[4]

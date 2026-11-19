@@ -1,4 +1,4 @@
-from ..ast_nodes import Atribuicao, Binaria, Declaracao, Inteiro, Saida, Variavel
+from ..ast_nodes import Atribuicao, Binaria, Booleano, Declaracao, Inteiro, Saida, Variavel
 from ..diagnosticos import ExceptionSyntax
 from .parser_atribuicao import atribuicao
 from .parser_controle import bloco, condicional, enquanto, para
@@ -37,28 +37,33 @@ class Parser:
         return self.peek().type == "EOF"
 
     def declaracao(self):
-        self.expect("KW_INT")
+        tipo = self.advance()
+        if tipo.type not in ("KW_INT", "KW_BOOL"):
+            raise ExceptionSyntax(tipo, ("KW_INT", "KW_BOOL"))
         nome = self.expect("IDENT")
         inicializador = None
         if self.match("ASSIGN"):
             inicializador = self.expressao()
         self.expect("SEMICOLON")
-        return Declaracao(nome.lexeme, inicializador)
+        return Declaracao(nome.lexeme, inicializador, tipo.lexeme, nome)
 
     def fator(self):
         token = self.peek()
         if token.type == "INT_LITERAL":
             self.advance()
-            return Inteiro(int(token.lexeme))
+            return Inteiro(int(token.lexeme), token)
+        if token.type in ("KW_TRUE", "KW_FALSE"):
+            self.advance()
+            return Booleano(token.type == "KW_TRUE", token)
         if token.type == "IDENT":
             self.advance()
-            return Variavel(token.lexeme)
+            return Variavel(token.lexeme, token)
         if self.match("LPAREN"):
             no = self.expressao()
             self.expect("RPAREN")
             return no
         raise ExceptionSyntax(
-            token, ("INT_LITERAL", "IDENT", "LPAREN")
+            token, ("INT_LITERAL", "IDENT", "LPAREN", "KW_TRUE", "KW_FALSE")
         )
 
     def termo(self):
@@ -66,7 +71,7 @@ class Parser:
         while self.peek().type in ("STAR", "SLASH"):
             operador = self.advance()
             direita = self.fator()
-            esquerda = Binaria(operador.lexeme, esquerda, direita)
+            esquerda = Binaria(operador.lexeme, esquerda, direita, operador)
         return esquerda
 
     def saida(self):
@@ -78,7 +83,10 @@ class Parser:
         return Saida(no)
 
     def expressao(self):
-        return expressao(self, Binaria)
+        return expressao(self, self.criar_binaria)
+
+    def criar_binaria(self, operador, esquerda, direita):
+        return Binaria(operador.lexeme, esquerda, direita, operador)
 
     def atribuicao(self, com_ponto_e_virgula=True):
         return atribuicao(self, Atribuicao, com_ponto_e_virgula)
